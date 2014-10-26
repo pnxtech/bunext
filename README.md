@@ -21,15 +21,15 @@ The purpose of bunext is to be able to query bunyan logs and extract useful info
 
 Given a log file called app.log you can invoke bunext to see the file's JSON data. This allows you to view the JSON data in a pretty print format.  While easier to read, this format is of limited value when your log file consists of thousands of entries.
 
-	$ bunyan app.log
+	$ bunext app.log
 
 
 Using bunext options you can specify date ranges and expression predicates which help you quickly filter and extract the information you're looking for.	
 
 You can also invoke JavaScript expressions against the file's JSON data.
 
-	$ bunayn app.log -e 'redis-status'
-	$ bunayn app.log -e 'redis-status.memory > 256000'
+	$ bunext app.log -e 'redis-status'
+	$ bunext app.log -e 'redis-status.memory > 256000'
 
 ## Install
 
