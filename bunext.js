@@ -33,21 +33,21 @@ function processLine(line) {
       try {
         var result = eval('jsObj.' + program.expression);
         if (result) {
-          if (program.source) {
-            output = JSON.stringify(jsObj, undefined, 2);
-          } else {
-            if (typeof result === 'boolean') {
-              var subExps = program.expression.split(' ');
-              text += eval('jsObj.' + subExps[0]);
-            } else if (typeof result === 'string' || typeof result === 'number') {
-              text += result;
-            } else if (typeof result === 'object') {
-              text += JSON.stringify(result);
+          if (typeof result === 'boolean') {
+            var subExps = program.expression.split(' ');
+            text += eval('jsObj.' + subExps[0]);
+            if (program.source) {
+              text = JSON.stringify(jsObj, undefined, 2);
             }
-            output = text;
+          } else if (typeof result === 'string' || typeof result === 'number') {
+            text += result;
+          } else if (typeof result === 'object') {
+            text += JSON.stringify(result);
           }
+          output = text;
         }
       } catch (e) {
+        output = '';
       }
     } else {
       output = text + JSON.stringify(jsObj, undefined, 2);
