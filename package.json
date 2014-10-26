@@ -1,0 +1,17 @@
+{
+  "name": "bunext",
+  "version": "0.0.1",
+  "description": "Bunyan Extractor - extract data from bunyan logs",
+  "author": "Carlos Justiniano",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "commander": "^2.5.0",
+    "moment": "^2.8.3"
+  },
+  "bin": {
+    "bunext": "bunext.js"
+  }
+}
