@@ -37,7 +37,7 @@ Install bunext from this source using:
 
 	$ ./install.sh
 	
-Alternatively, you can install bunext via NPM:
+[COMING SOON] Alternatively, you'll be able to install bunext via NPM:
 
 	$ [sudo] npm install bunext -g
 
