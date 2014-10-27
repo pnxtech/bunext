@@ -6,6 +6,9 @@ var fs = require('fs')
   , moment = require('moment')
   , liner = require('./liner');
 
+var dateStart, dateEnd;
+
+
 /**
  * displayError
  * Display error messages in red
@@ -29,6 +32,14 @@ function processLine(line) {
     } else if (program.prettydate) {
       text = moment(jsObj.time).format("MMMM Do YYYY, hh:mm:ss a") + ' | ';
     }
+
+    if (program.dates) {
+      var logEntryDate = moment(jsObj.time).unix();
+      if (logEntryDate < dateStart || logEntryDate > dateEnd) {
+        return null;
+      }
+    }
+
     if (program.expression) {
       try {
         var result = eval('jsObj.' + program.expression);
@@ -67,6 +78,7 @@ function main() {
     .version('0.0.1')
     .usage('[options] bunyan.log')
     .option('-a, --array', 'Output results in array format')
+    .option('-d, --dates [start,end]', 'Specify a date range')
     .option('-e, --expression [expression]', 'Filter using expression predicate')
     .option('-s, --source', 'Extract source (JSON) object')
     .option('-t, --timestamp', 'Show timestamp in results')
@@ -83,6 +95,16 @@ function main() {
       console.log('[');
     }
 
+    if (program.dates) {
+      var dates = program.dates.split(',');
+      if (dates.length !== 2) {
+        displayError('date range should consist of two commas separated dates');
+        process.exit(-1);
+      }
+      dateStart = moment(dates[0].trim()).unix();
+      dateEnd = (dates[1].trim()==='now') ? moment().unix() : moment(dates[1].trim()).unix();
+    }
+
     source.pipe(liner);
     source.on('error', function(err) {
       if (err.errno === 34) {
@@ -96,7 +118,9 @@ function main() {
       var lineIn, lineOut;
       while (lineIn = liner.read()) {
         lineOut = processLine(lineIn);
-        console.log(lineOut + ((arrayOutput) ? ',' : ''));
+        if (lineOut) {
+          console.log(lineOut + ((arrayOutput) ? ',' : ''));
+        }
       }
     });
     process.on('exit', function() {
