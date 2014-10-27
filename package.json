@@ -2,7 +2,23 @@
   "name": "bunext",
   "version": "0.0.1",
   "description": "Bunyan Extractor - extract data from bunyan logs",
-  "author": "Carlos Justiniano",
+  "author": "Carlos Justiniano <carlos.justiniano@gmail.com>",
+  "contributors": [
+    {
+      "name": "Carlos Justiniano",
+      "email": "carlos.justiniano@gmail.com"
+    }
+  ],
+  "keywords": [
+    "bunyan",
+    "extract",
+    "extractor",
+    "log",
+    "logfile",
+    "json"
+  ],
+  "analyze": false,
+  "license": "MIT",
   "engines": {
     "node": ">=0.10"
   },
