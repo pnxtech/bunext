@@ -88,7 +88,7 @@ function main() {
   if (!program.args.length) {
     program.help();
   } else {
-    var arrayOutput = (program['array'] && program.source)
+    var arrayOutput = program['array']
       , source = fs.createReadStream(program.args[0]);
 
     if (arrayOutput) {
