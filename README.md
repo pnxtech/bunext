@@ -37,7 +37,7 @@ Install bunext from this source using:
 
 	$ ./install.sh
 	
-[COMING SOON] Alternatively, you'll be able to install bunext via NPM:
+Alternatively, you'll be able to install bunext via NPM:
 
 	$ [sudo] npm install bunext -g
 
@@ -56,10 +56,12 @@ $ bunext
     -h, --help                     output usage information
     -V, --version                  output the version number
     -a, --array                    Output results in array format
+    -d, --dates [start,end]        Specify a date range
     -e, --expression [expression]  Filter using expression predicate
     -s, --source                   Extract source (JSON) object
     -t, --timestamp                Show timestamp in results
     -p, --prettydate               Show pretty timestamp in results
+
 ```
 
 ### Using expressions
