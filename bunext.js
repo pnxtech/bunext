@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+
 var fs = require('fs')
   , program = require('commander')
   , chalk = require('chalk')
@@ -16,6 +17,20 @@ var dateStart, dateEnd;
  */
 function displayError(message) {
   console.log(chalk.red.bold(message));
+}
+
+/**
+ * processJSON
+ * @param jsObj
+ */
+function processedJSON(jsObj) {
+  var text;
+  if (program.source) {
+    text = JSON.stringify(jsObj, undefined, 2);
+  } else {
+    text = JSON.stringify(jsObj, undefined);
+  }
+  return text;
 }
 
 /**
@@ -55,13 +70,9 @@ function processLine(line) {
           if (typeof result === 'boolean') {
             var subExps = program.expression.split(' ');
             text += eval('jsObj.' + subExps[0]);
-            if (program.source) {
-              text = JSON.stringify(jsObj, undefined, 2);
-            } else if (program.raw) {
-              text = JSON.stringify(jsObj, undefined);
-            }
+            text += processedJSON(jsObj);
           } else if (typeof result === 'string' || typeof result === 'number') {
-            if (program['array'] && startQuote===false) {
+            if (program['array'] && startQuote === false) {
               text += '"';
             }
             text += result;
@@ -69,7 +80,7 @@ function processLine(line) {
               text += '"';
             }
           } else if (typeof result === 'object') {
-            text += JSON.stringify(result);
+            text += processedJSON(jsObj);
           }
           output = text;
         }
@@ -77,7 +88,7 @@ function processLine(line) {
         output = '';
       }
     } else {
-      output = text + JSON.stringify(jsObj, undefined, 2);
+      output = text + processedJSON(jsObj);
     }
   } catch (e) {
     displayError(e);
@@ -91,7 +102,7 @@ function processLine(line) {
  */
 function main() {
   program
-    .version('0.0.3')
+    .version('0.0.4')
     .usage('[options] bunyan.log')
     .option('-a, --array', 'Output results in array format')
     .option('-d, --dates [start,end]', 'Specify a date range')
