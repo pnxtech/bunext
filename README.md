@@ -2,6 +2,8 @@
 
 Bunyan is a logging [library](https://github.com/trentm/node-bunyan) for node.js applications which writes log entries in the JSON format.  Bunext (Bunyan Extractor), is a commandline tool for extracting data and working with Bunyan log files and the JSON they contain.
 
+[![NPM Stats](https://nodei.co/npm/bunext.png?downloads=true)](https://npmjs.org/package/bunext)
+
 ## Current status
 
 __WARNING__: bunext is currently under development and considered `alpha` software at this time! That said, it's already proven useful in my own work with bunyan! Feel free to try it and submit feedback.
@@ -38,8 +40,6 @@ You can install bunext from its GitHub source, using using:
 Alternatively, you can install bunext via NPM:
 
 	$ [sudo] npm install bunext -g
-
-[![NPM Stats](https://nodei.co/npm/bunext.png?downloads=true)](https://npmjs.org/package/bunext)
 
 The first install method above is useful when you want to work with the bunext source code and potentially contribute pull requests.  The second method is useful when you need to quickly install bunext on machines where you need to debug the source of an application problem by reviewing your log files.
 
