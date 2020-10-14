@@ -102,7 +102,7 @@ function processLine(line) {
  */
 function main() {
   program
-    .version('0.0.4')
+    .version('1.0.0')
     .usage('[options] bunyan.log')
     .option('-a, --array', 'Output results in array format')
     .option('-d, --dates [start,end]', 'Specify a date range')

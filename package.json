@@ -1,12 +1,12 @@
 {
   "name": "bunext",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Bunyan Extractor - extract data from bunyan logs",
-  "author": "Carlos Justiniano <carlos.justiniano@gmail.com>",
+  "author": "Carlos Justiniano <cjus@ieee.org>",
   "contributors": [
     {
       "name": "Carlos Justiniano",
-      "email": "carlos.justiniano@gmail.com"
+      "email": "cjus@ieee.org"
     }
   ],
   "keywords": [
@@ -20,13 +20,21 @@
   "analyze": false,
   "license": "MIT",
   "engines": {
-    "node": ">=0.10"
+    "node": ">=8.0.0"
   },
   "dependencies": {
-    "chalk": "^0.5.1",
-    "commander": "^2.5.0",
-    "moment": "^2.8.3"
+    "chalk": "4.1.0",
+    "commander": "6.1.0",
+    "moment": "2.29.1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pnxtech/bunext.git"
+  },  
+  "bugs": {
+    "url": "https://github.com/pnxtech/bunext/issues"
+  },
+  "homepage": "https://github.com/pnxtech/bunext#readme",
   "bin": {
     "bunext": "bunext.js"
   }

@@ -1,8 +1,7 @@
-.idea
-.bak
-.log
+.DS_Store
+.vscode
+*.bak
+*.log
 scratch.*
-config/properties.js
 node_modules
-public
-
+package-lock.json
