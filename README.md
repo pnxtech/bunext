@@ -4,10 +4,6 @@ Bunyan is a logging [library](https://github.com/trentm/node-bunyan) for node.js
 
 [![NPM Stats](https://nodei.co/npm/bunext.png?downloads=true)](https://npmjs.org/package/bunext)
 
-## Current status
-
-__WARNING__: bunext is currently under development and considered `alpha` software at this time! That said, it's already proven useful in my own work with bunyan! Feel free to try it and submit feedback.
-
 ## Usage
 
 Bunext is a commandline tool so you'll use it at your shell prompt. It requires a bunyan log file to operate on. A typical bunyan log file consists of text containing concatinated stringified JSON.
