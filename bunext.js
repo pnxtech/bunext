@@ -69,7 +69,10 @@ function processLine(line) {
         if (result) {
           if (typeof result === 'boolean') {
             var subExps = program.expression.split(' ');
-            text += eval('jsObj.' + subExps[0]);
+            var res = eval('jsObj.' + subExps[0]);
+            if (typeof res !== 'boolean') {
+              text += res;
+            }
             text += processedJSON(jsObj);
           } else if (typeof result === 'string' || typeof result === 'number') {
             if (program['array'] && startQuote === false) {
