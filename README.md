@@ -52,62 +52,77 @@ $ bunext
     -h, --help                     output usage information
     -V, --version                  output the version number
     -a, --array                    Output results in array format
+    -c, --compare [pattern]        Used with -e to filter by sub pattern
     -d, --dates [start,end]        Specify a date range
     -e, --expression [expression]  Filter using expression predicate
     -r, --raw                      Output raw bunyan data
     -s, --source                   Extract source (JSON) object
     -t, --timestamp                Show timestamp in results
     -p, --prettydate               Show pretty timestamp in results
-
 ```
 
 ### -V, --version
 Output bunext version number
 
 	$ bunext -V
-
-	0.0.1
+	1.0.3
 
 ### -a, --array
 Output data in an array format. This is useful when you want to collect specific data an into an array that you'll use in code.
 
-	$ bunext -a -e 'request_info.xForwardedFor' test.log
+```shell
+$ bunext -a -e 'request_info.xForwardedFor' test.log
 
-	[
-		"199.116.73.139, 
-		"172.31.8.142",
-		"107.178.200.192,
-	]
+[
+  "199.116.73.139, 
+  "172.31.8.142",
+  "107.178.200.192,
+]
+```
 
 and...
 
-    $ bunext -ate 'redis_status.used_memory' temp.log
+```
+$ bunext -ate 'redis_status.used_memory' temp.log
 
-    [
-    "2014-10-25T18:37:01.454Z | 3081232",
-    "2014-10-25T18:47:31.376Z | 3081232",
-    "2014-10-25T19:47:20.964Z | 3081232",
-    "2014-10-25T19:50:18.845Z | 3081232",
-    "2014-10-25T19:55:16.202Z | 3081232",
-    "2014-10-25T19:55:43.546Z | 3373328",
-    "2014-10-25T20:01:47.410Z | 617488",
-    ]
+[
+"2014-10-25T18:37:01.454Z | 3081232",
+"2014-10-25T18:47:31.376Z | 3081232",
+"2014-10-25T19:47:20.964Z | 3081232",
+"2014-10-25T19:50:18.845Z | 3081232",
+"2014-10-25T19:55:16.202Z | 3081232",
+"2014-10-25T19:55:43.546Z | 3373328",
+"2014-10-25T20:01:47.410Z | 617488",
+]
+```
 
 You may need to cleanup the resulting output in order for the output to be useable.  Bunext uses a simple and rather naive method of building an array. For example, if your JSON has double quotes they won't be escaped. User beware.
+
+### -c, --compare
+The compare flag is used with the expression flag.
+First the express identifies a search pattern in the JSON entry.  This is typically a json path which resolves to a string value.  The compare flag takes the output of the expression against the presence of a substring.  The JavaScript indexOf method is used to find a sub string.
+
+```shell
+$ bunext -e "body.serviceName" -c "log" test.log
+```
 
 ### -d, --dates
 Filtering by a date range is one of the most important things you can do when narrowing in on a server error. Monitoring tools will tell you when an issue occurred and you can use that information with bunext.
 
 Here we ask bunex to search the test.log file for entries who's level is set to 60 (Fatal error) between October 10 and October 30th.
 
-	$ bunext -d '10/10/14 - 10/30/14' -e 'level===60' test.log
+```shell
+$ bunext -d '10/10/14 - 10/30/14' -e 'level===60' test.log
+```
 
 ### -e, --expression
 The ability to use JavaScript expressions to query bunyan log data is one of the most useful features of bunext. When combined with a date range you have a powerful query engine in your arsinal.
 
 Bunext expects a JavaScript expression that results in a boolean value or a primitive type.
 
-	$ bunext -e 'level===60' test.log
+```shell
+$ bunext -e 'level===60' test.log
+```
 
 In the example above, we used the expression 'level===60'.  This will return true as the log file in question does have entries where level is indeed 60.  However, we're probably not expecting to see the following as output:
 
@@ -120,11 +135,13 @@ In the example above, we used the expression 'level===60'.  This will return tru
 
 The reason is ofcourse that the expression evalutes to true in some cases.  If we want to see the associated JSON object we need to specify the -s, --source option flag.
 
-	$ bunext -s -e 'level===60' test.log
+```shell
+$ bunext -s -e 'level===60' test.log
+```
 
 Then we might see something like this:
 
-```
+```json
 {
   "name": "siteserver",
   "hostname": "ip-172-31-40-196",
@@ -142,7 +159,7 @@ Then we might see something like this:
 
 In this next example lets consider the following log entry:
 
-```
+```shell
 {
   "name": "siteserver",
   "hostname": "ip-172-31-40-161",
@@ -165,15 +182,17 @@ In this next example lets consider the following log entry:
 
 Lets say we're interested in exporting the memory usage of Redis over a period of time.  The `used_memory` field is actually stored inside of the redis_status object.  To reference it, we simply use an expression of `redis_status.used_memory`
 
-	$ bunext -e 'redis_status.used_memory' siteserver.log
+```shell
+$ bunext -e 'redis_status.used_memory' siteserver.log
 
-	3081232
-    3081232
-    3081232
-    3081232
-    3081232
-    3373328
-    617488
+3081232
+3081232
+3081232
+3081232
+3081232
+3373328
+617488
+```
 
 That's cool.  However, not that useful in its current form.  Let's use the `-t` option to view the time stamp for each entry:
 
@@ -193,22 +212,23 @@ Now that's better!
 
 This gets better as we use conditional expressions to further filter the output
 
-	$ bunext -te 'redis_status.used_memory < 3081232' siteserver.log
+```shell
+$ bunext -te 'redis_status.used_memory < 3081232' siteserver.log
 
-	2014-10-25T20:01:47.410Z | 617488
+2014-10-25T20:01:47.410Z | 617488
+```
 
 ### -r, --raw
 The -r and --raw flags tell bunext to output raw bunyan entries.  This is useful in a number of use cases, such as performing multi-staged queries and concatinating entries from multiple servers prior to further querying the resulting data.
 
 Consider this sample bunyan entry:
 
-```
-{"name":"siteserver","hostname":"ip-172-31-40-161","pid":1811,"level":30,"event":"monitor","node_status":{"architecture":"x64","platform":"linux","nodeVersion":"v0.10.25","memory":{"rss":46936064,"heapTotal":54096128,"heapUsed":20113944},"uptime":"1 minute, 30.171894613999932 seconds"},"msg":"","time":"2014-10-25T18:49:00.346Z","v":0}
-```
+
+> {"name":"siteserver","hostname":"ip-172-31-40-161","pid":1811,"level":30,"event":"monitor","node_status":{"architecture":"x64","platform":"linux","nodeVersion":"v0.10.25","memory":{"rss":46936064,"heapTotal":54096128,"heapUsed":20113944},"uptime":"1 minute, 30.171894613999932 seconds"},"msg":"","time":"2014-10-25T18:49:00.346Z","v":0}
 
 Let's format it a bit to have an easier look:
 
-```
+```json
 {
   "name": "siteserver",
   "hostname": "ip-172-31-40-161",
@@ -236,20 +256,24 @@ Here we're interested in extracting memory usage for a node server. First we wan
 
 Using the raw flag we can extract all of the raw bunyan JSON entries which contain an event of monitor and save that in a temp file.
 
-	$ bunext -re 'event==="monitor"' siteserver.log > temp.log
+```shell
+$ bunext -re 'event==="monitor"' siteserver.log > temp.log
+```
 
 Then we can operate on the temp file to extract the heapUsed data.
 
-	$ bunext -te 'node_status.memory.heapUsed > 20113944' temp.log
+```shell
+$ bunext -te 'node_status.memory.heapUsed > 20113944' temp.log
 
-	2014-10-25T19:52:00.819Z | 20140080
-	2014-10-25T19:53:00.818Z | 20185648
-	2014-10-25T19:54:00.818Z | 20220424
-	2014-10-25T19:55:00.819Z | 20253272
-	2014-10-25T20:04:00.370Z | 20152888
-	2014-10-25T20:05:00.383Z | 20187744
-	2014-10-25T20:06:00.387Z | 20220672
-	2014-10-25T20:07:00.387Z | 20254424
+2014-10-25T19:52:00.819Z | 20140080
+2014-10-25T19:53:00.818Z | 20185648
+2014-10-25T19:54:00.818Z | 20220424
+2014-10-25T19:55:00.819Z | 20253272
+2014-10-25T20:04:00.370Z | 20152888
+2014-10-25T20:05:00.383Z | 20187744
+2014-10-25T20:06:00.387Z | 20220672
+2014-10-25T20:07:00.387Z | 20254424
+```
 
 ### -s, --source
 The source option flag instructs bunext to return the source JSON data for a matching query. Unlike the raw option the source JSON is extracted and formatted for readability.

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 
 var fs = require('fs')
   , program = require('commander')
@@ -67,23 +66,44 @@ function processLine(line) {
       try {
         var result = eval('jsObj.' + program.expression);
         if (result) {
-          if (typeof result === 'boolean') {
+          var isBool = typeof result === 'boolean';
+          var isString = typeof result === 'string';
+          var isNumber = typeof result === 'number';
+          var isObject = typeof result === 'object' ;
+
+          if (isObject) {
+            text += processedJSON(jsObj);
+          } else if (isBool) {
             var subExps = program.expression.split(' ');
             var res = eval('jsObj.' + subExps[0]);
             if (typeof res !== 'boolean') {
               text += res;
             }
             text += processedJSON(jsObj);
-          } else if (typeof result === 'string' || typeof result === 'number') {
-            if (program['array'] && startQuote === false) {
-              text += '"';
+          } else if (isString || isNumber) {
+            if (isString) {
+              if (program['array'] && startQuote === false) {
+                text += '"';
+              } 
+              if (program['compare']) {
+                if (result.indexOf(program['compare']) > -1) {
+                  text += processedJSON(jsObj);
+                } else {
+                  return '';
+                }
+              } else {
+                if (program['raw'] || program['source']) {
+                  text += processedJSON(jsObj);
+                } else {
+                  text += result;
+                }
+              }            
+              if (program['array']) {
+                text += '"';
+              }    
+            } else if (isNumber) {
+              text += result;
             }
-            text += result;
-            if (program['array']) {
-              text += '"';
-            }
-          } else if (typeof result === 'object') {
-            text += processedJSON(jsObj);
           }
           output = text;
         }
@@ -105,9 +125,10 @@ function processLine(line) {
  */
 function main() {
   program
-    .version('1.0.0')
+    .version('1.0.3')
     .usage('[options] bunyan.log')
     .option('-a, --array', 'Output results in array format')
+    .option('-c, --compare [pattern]', 'Used with -e to filter by sub pattern')
     .option('-d, --dates [start,end]', 'Specify a date range')
     .option('-e, --expression [expression]', 'Filter using expression predicate')
     .option('-r, --raw', 'Output raw bunyan data')
