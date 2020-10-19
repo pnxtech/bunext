@@ -1,6 +1,6 @@
 {
   "name": "bunext",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Bunyan Extractor - extract data from bunyan logs",
   "author": "Carlos Justiniano <cjus@ieee.org>",
   "contributors": [

@@ -2,6 +2,8 @@
 
 Bunyan is a logging [library](https://github.com/trentm/node-bunyan) for node.js applications which writes log entries in the JSON format.  Bunext (Bunyan Extractor), is a commandline tool for extracting data and working with Bunyan log files and the JSON they contain.
 
+> **Bonus Tip:** bunext output is compatible with the excellent [jq](https://stedolan.github.io/jq/) tool for advanced JSON queries and syntax highlighting. 
+
 ## Usage
 
 Bunext is a commandline tool so you'll use it at your shell prompt. It requires a bunyan log file to operate on. A typical bunyan log file consists of text containing concatinated stringified JSON.
@@ -65,7 +67,7 @@ $ bunext
 Output bunext version number
 
 	$ bunext -V
-	1.0.3
+	1.0.4
 
 ### -a, --array
 Output data in an array format. This is useful when you want to collect specific data an into an array that you'll use in code.
